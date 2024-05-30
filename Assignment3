@@ -1,0 +1,349 @@
+1. What are the six combinations of access modifier keywords and what do they do? 
+public: Accessible from anywhere.
+private: Accessible only within the containing class.
+protected: Accessible within the containing class and derived classes.
+internal: Accessible within the same assembly, but not from another assembly.
+protected internal: Accessible within the same assembly and also in derived classes in other assemblies.
+private protected: Accessible within the containing class or derived classes, but only within the same assembly.
+
+2. What is the difference between the static, const, and readonly keywords when applied to a type member?
+static: Indicates the member belongs to the type itself rather than an instance of the type.
+const: Indicates the value of the member is constant and cannot be changed. It is set at compile time.
+readonly: Indicates the value of the member can only be set during initialization or in a constructor. It is set at runtime.
+
+3. What does a constructor do?
+A constructor is a special method that is called when an instance of a class is created.
+
+4. Why is the partial keyword useful?
+The partial keyword allows a class, struct, or interface to be split into multiple files.
+
+5. What is a tuple?
+A tuple is a data structure that can hold multiple values of different types. 
+
+6. What does the C# record keyword do?
+The record keyword defines a reference type that provides built-in functionality for encapsulating data. Records are immutable 
+
+7. What does overloading and overriding mean?
+Overloading: Defining multiple methods with the same name but different parameters.
+Overriding: Providing a new implementation for a method inherited from a base class.
+
+8. What is the difference between a field and a property?
+Field is a variable that is declared directly in a class or struct.
+A property provides a mechanism to read, write, or compute the value of a private field. It can include get and set.
+
+9. How do you make a method parameter optional?
+By specifying a default value for the parameter in the method signature. 
+
+10. What is an interface and how is it different from abstract class?
+An interface defines a contract that implementing classes must adhere to. It cannot contain any implementation.
+An abstract class can contain both abstract methods without implementation and concrete methods with implementation.
+
+11. What accessibility level are members of an interface?
+Members of an interface are always public by default.
+
+12. True/False. Polymorphism allows derived classes to provide different implementations of the same method.
+T
+
+13. True/False. The override keyword is used to indicate that a method in a derived class is providing its own implementation of a method.
+T
+
+14. True/False. The new keyword is used to indicate that a method in a derived class is providing its own implementation of a method.
+T
+
+15. True/False. Abstract methods can be used in a normal (non-abstract) class. 
+F
+
+16. True/False. Normal (non-abstract) methods can be used in an abstract class. 
+T
+
+17. True/False. Derived classes can override methods that were virtual in the base class. 
+T
+
+18. True/False. Derived classes can override methods that were abstract in the base class. 
+T
+
+19. True/False. In a derived class, you can override a method that was neither virtual non abstract in the base class.
+F
+
+20. True/False. A class that implements an interface does not have to provide an implementation for all of the members of the interface.
+F
+
+21. True/False. A class that implements an interface is allowed to have other members that aren’t defined in the interface.
+T
+
+22. True/False. A class can have more than one base class.
+F
+
+23. True/False. A class can implement more than one interface.
+T
+
+1.
+using System;
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        int[] numbers = GenerateNumbers();
+        Reverse(numbers);
+        PrintNumbers(numbers);
+    }
+
+    public static int[] GenerateNumbers()
+    {
+        int length = 10; 
+        int[] numbers = new int[length];
+        for (int i = 0; i < length; i++)
+        {
+            numbers[i] = i + 1;
+        }
+        return numbers;
+    }
+
+    public static void Reverse(int[] array)
+    {
+        int start = 0;
+        int end = array.Length - 1;
+        while (start < end)
+        {
+            int temp = array[start];
+            array[start] = array[end];
+            array[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    public static void PrintNumbers(int[] array)
+    {
+        foreach (var item in array)
+        {
+            Console.Write(item + " ");
+        }
+        Console.WriteLine(); 
+    }
+}
+
+2. 
+using System;
+public class Program
+{
+    public static void Main()
+    {
+        for (int i = 1; i <= 10; i++)
+        {
+            Console.WriteLine($"Fibonacci({i}) = {Fibonacci(i)}");
+        }
+    }
+
+    public static int Fibonacci(int n)
+    {
+        if (n <= 0)
+        {
+            throw new ArgumentException("n should be a positive number.");
+        }
+
+        if (n == 1 || n == 2)
+        {
+            return 1;
+        }
+
+        return Fibonacci(n - 1) + Fibonacci(n - 2);
+    }
+}
+
+using System;
+using System.Collections.Generic;
+public abstract class Person
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public decimal Salary { get; set; }
+    public List<string> Addresses { get; set; } = new List<string>();
+
+    public Person(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
+
+    public abstract void CalculateSalary();
+    public abstract void GetAddresses();
+}
+
+public class Student : Person
+{
+    public int StudentId { get; set; }
+    public List<string> Courses { get; set; } = new List<string>();
+
+    public Student(string firstName, string lastName, int studentId) : base(firstName, lastName)
+    {
+        StudentId = studentId;
+    }
+
+    public override void CalculateSalary()
+    {
+        Salary = 0;
+    }
+
+    public override void GetAddresses()
+    {
+        foreach (var address in Addresses)
+        {
+            Console.WriteLine(address);
+        }
+    }
+
+    public void CalculateGPA()
+    {
+    }
+}
+
+public class Instructor : Person
+{
+    public int InstructorId { get; set; }
+    public DateTime JoinDate { get; set; }
+
+    public Instructor(string firstName, string lastName, int instructorId, DateTime joinDate) : base(firstName, lastName)
+    {
+        InstructorId = instructorId;
+        JoinDate = joinDate;
+    }
+
+    public override void CalculateSalary()
+    {
+        int yearsOfExperience = DateTime.Now.Year - JoinDate.Year;
+    }
+
+    public override void GetAddresses()
+    {
+        foreach (var address in Addresses)
+        {
+            Console.WriteLine(address);
+        }
+    }
+}
+
+public interface IPersonService
+{
+    void CalculateSalary();
+    void GetAddresses();
+}
+
+public interface IStudentService : IPersonService
+{
+    void EnrollCourse(string course);
+}
+
+public interface IInstructorService : IPersonService
+{
+    void TeachCourse(string course);
+}
+
+public class Course
+{
+    public string CourseName { get; set; }
+    public List<Student> EnrolledStudents { get; set; } = new List<Student>();
+
+    public Course(string courseName)
+    {
+        CourseName = courseName;
+    }
+}
+
+public class Department
+{
+    public string DepartmentName { get; set; }
+    public Instructor Head { get; set; }
+    public decimal Budget { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public List<Course> Courses { get; set; } = new List<Course>();
+
+    public Department(string departmentName, Instructor head, decimal budget, DateTime startDate, DateTime endDate)
+    {
+        DepartmentName = departmentName;
+        Head = head;
+        Budget = budget;
+        StartDate = startDate;
+        EndDate = endDate;
+    }
+}
+
+public class Color
+{
+    public int Red { get; set; }
+    public int Green { get; set; }
+    public int Blue { get; set; }
+    public int Alpha { get; set; } = 255; 
+
+    public Color(int red, int green, int blue, int alpha = 255)
+    {
+        Red = red;
+        Green = green;
+        Blue = blue;
+        Alpha = alpha;
+    }
+
+    public int GetGrayScale()
+    {
+        return (Red + Green + Blue) / 3;
+    }
+}
+
+public class Ball
+{
+    public int Size { get; set; }
+    public Color Color { get; set; }
+    private int throwCount;
+
+    public Ball(int size, Color color)
+    {
+        Size = size;
+        Color = color;
+    }
+
+    public void Pop()
+    {
+        Size = 0;
+    }
+
+    public void Throw()
+    {
+        if (Size > 0)
+        {
+            throwCount++;
+        }
+    }
+
+    public int GetThrowCount()
+    {
+        return throwCount;
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        Student student = new Student("Ann", "David", 12345);
+        student.Addresses.Add("111 Washington St");
+        student.CalculateSalary();
+        student.GetAddresses();
+        student.Courses.Add("CS100");
+
+        Instructor instructor = new Instructor("Bob", "Jason", 12345, new DateTime(2024, 05, 29));
+        instructor.Addresses.Add("222 NewYork St");
+        instructor.CalculateSalary();
+        instructor.GetAddresses();
+
+        Color color = new Color(255, 0, 0); 
+        Ball ball = new Ball(10, color);
+
+        ball.Throw();
+        ball.Throw();
+        ball.Pop();
+        ball.Throw(); 
+
+        Console.WriteLine($"Ball throw count: {ball.GetThrowCount()}");
+    }
+}
